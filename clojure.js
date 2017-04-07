@@ -39,8 +39,9 @@ var countdownGenerator = function (x) {
    */ 
   return function(){
     var num = x--;
-    var result = (num>0) ? "T-minus "+ num + "..." 
-    : (num==0) ? "Blast Off!" 
+    var result = 
+      (num > 0) ? "T-minus "+ num + "..." 
+    : (num == 0) ? "Blast Off!" 
     : "Rockets already gone, bub!";
     console.log(result);
   }
