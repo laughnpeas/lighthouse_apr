@@ -1,0 +1,20 @@
+{
+  "name": "w01-mocha-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "docs": "mocha --reporter markdown > testdoc.md"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "mocha": "^3.2.0",
+    "nyan": "^1.0.4"
+  }
+}
