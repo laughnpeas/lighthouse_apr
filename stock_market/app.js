@@ -9,7 +9,7 @@ var maxValue = function(arr){
   }
   return maxItem; 
 };
-
+// findin max profit
 function maxProfit(arr){
   var result = [];
   arr.forEach(function(b){
