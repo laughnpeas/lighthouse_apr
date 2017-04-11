@@ -5,7 +5,16 @@ let GITHUB_USER = "laughnpeas";
 let GITHUB_TOKEN = "d5c5e97fadbe28a9675e2ca078f651cbf15bb13e";
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  let requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+let requestURL = `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`;
+  if(repoOwner === undefined){
+    console.log('enter repo owner name');
+    return;
+  }
+
+  if(repoName === undefined){
+    console.log('enter repo name');
+    return;
+  }
   let options = {
       uri: requestURL,
       method: 'GET',
@@ -17,7 +26,14 @@ function getRepoContributors(repoOwner, repoName, cb) {
       return;
     }
     const contribs = JSON.parse(body);
-    cb(contribs, downloadImageByURL);
+    contribs.forEach((entry) => {
+      let filePath = `${entry.login}.jpg`
+      try{
+        cb(entry.avatar_url, filePath);
+      }catch(err){
+        console.log(`Failed to Download Image by Url ${err}`);
+      }
+    });
   });
 }
 
@@ -57,4 +73,4 @@ function downloadImageByURL(url, filePath) {
       console.log('Downloading image...');
 }
 
-getRepoContributors("jquery", "jquery", listImgURL);
+getRepoContributors(process.argv[2], process.argv[3], downloadImageByURL);
