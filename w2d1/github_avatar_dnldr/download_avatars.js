@@ -7,12 +7,12 @@ let GITHUB_TOKEN = "d5c5e97fadbe28a9675e2ca078f651cbf15bb13e";
 function getRepoContributors(repoOwner, repoName, cb) {
 let requestURL = `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`;
   if(repoOwner === undefined){
-    console.log('enter repo owner name');
+    console.log('Please, enter repo owner name');
     return;
   }
 
   if(repoName === undefined){
-    console.log('enter repo name');
+    console.log('Please, enter repo name');
     return;
   }
   let options = {
