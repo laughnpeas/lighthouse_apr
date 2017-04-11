@@ -4,7 +4,6 @@ let request = require('request');
 
 let options = {
     host:'api.github.com',
-    uri: `api.github.com/repos/laughnpeas/images/contents/avatarsls`,
     path: `/repos/laughnpeas/images/contents/avatars`,
     method: 'GET',
     headers: {'user-agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)'}
