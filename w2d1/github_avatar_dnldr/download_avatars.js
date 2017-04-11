@@ -1,9 +1,11 @@
-var request = require('request');
-var GITHUB_USER = "laughnpeas";
-var GITHUB_TOKEN = "d5c5e97fadbe28a9675e2ca078f651cbf15bb13e";
+'use strict'
+let request = require('request');
+let fs = require('fs'); 
+let GITHUB_USER = "laughnpeas";
+let GITHUB_TOKEN = "d5c5e97fadbe28a9675e2ca078f651cbf15bb13e";
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  let requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   let options = {
       uri: requestURL,
       method: 'GET',
@@ -15,14 +17,44 @@ function getRepoContributors(repoOwner, repoName, cb) {
       return;
     }
     const contribs = JSON.parse(body);
-    listImgURL(contribs);
+    listImgURL(contribs, downloadImageByURL);
   });
 }
 
-function listImgURL(entry){
+function listImgURL(entry, cb){
   entry.forEach( (item) => {
-    console.log(item.avatar_url);
+    let filePath = `${item.login}.jpg`
+    try{
+      cb(item.avatar_url, filePath);
+    }catch(err){
+      console.log(`Failed to Download Image by Url ${err}`);
+    }
   });
+}
+
+function checkFolder(path){
+  return fs.existsSync(path);
+}
+
+function downloadImageByURL(url, filePath) {
+  let dir = './avatars';
+  if(!checkFolder(dir)){
+    fs.mkdir(dir);
+  }
+  filePath = dir+'/'+filePath;
+  
+  request.get(`${url}`)
+    .on('error', (error) => {
+      return console.error(`Failed to download file : error: ${error}`);
+    })
+    .on('response', (response) => {
+      console.log('Response Status Message: ', response.statusMessage);
+    })
+    .on('end', (end) =>{
+      console.log('Download complete.');
+    })
+    .pipe(fs.createWriteStream(filePath));
+      console.log('Downloading image...');
 }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
