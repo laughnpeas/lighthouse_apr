@@ -17,7 +17,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
       return;
     }
     const contribs = JSON.parse(body);
-    listImgURL(contribs, downloadImageByURL);
+    cb(contribs, downloadImageByURL);
   });
 }
 
@@ -42,7 +42,7 @@ function downloadImageByURL(url, filePath) {
     fs.mkdir(dir);
   }
   filePath = dir+'/'+filePath;
-  
+
   request.get(`${url}`)
     .on('error', (error) => {
       return console.error(`Failed to download file : error: ${error}`);
@@ -57,7 +57,4 @@ function downloadImageByURL(url, filePath) {
       console.log('Downloading image...');
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", result);
-});
+getRepoContributors("jquery", "jquery", listImgURL);
