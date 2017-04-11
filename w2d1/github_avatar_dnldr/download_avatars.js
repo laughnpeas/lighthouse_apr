@@ -1,12 +1,13 @@
 'use strict'
-
+require('dotenv').config();
 let request = require('request');
 let fs = require('fs'); 
-let GITHUB_USER = "laughnpeas";
-let GITHUB_TOKEN = "d5c5e97fadbe28a9675e2ca078f651cbf15bb13e";
+let GITHUB_USER = process.env.GITHUB_USER;
+let GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 function getRepoContributors(repoOwner, repoName, cb) {
 let requestURL = `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`;
+console.log(requestURL);
 
 // If the user does not specify both arguments, the program should not attempt a request. 
 // terminate with an error message letting the user know about the problem.
