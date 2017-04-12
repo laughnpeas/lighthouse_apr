@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.set('view engine', 'ejs');
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 
 let urlDatabase = {
@@ -13,7 +15,8 @@ let urlDatabase = {
 };
 
 app.get('/', (req, res) => {
-  let templateVars = {urls: urlDatabase};
+  let templateVars = {urls: urlDatabase,
+                      userName: req.cookies["userName"]};
   res.render('urls_index', templateVars);
 });
 
@@ -72,6 +75,15 @@ app.post("/urls/:id", (req, res) => {
   res.render("urls_index", {urls: urlDatabase} );
 });
 
+app.post("/login", (req, res) => {
+  res.cookie('userName', req.body.username);
+  res.redirect("/");
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('userName', { path: '/' });
+  res.redirect("/");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

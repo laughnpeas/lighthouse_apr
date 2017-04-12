@@ -1,17 +1,13 @@
 <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
-
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-                EJS Is Fun
-            </a>
-        </div>
-
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
-      
     </div>
+    <% if(userName === undefined || userName === ""){ %>
+        <form action="/login" method="POST">
+            <input type="text" name="username"> <button name="login" value="login">Sign In</button>
+        </form>
+    <% } else{ %>
+        <form action="/logout" method="POST">
+            <label for="userName"><%= userName %></label><button name="logout" type="submit" value="logout">Logout</button>
+        </form>
+    <% }%>
 </nav>
