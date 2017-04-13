@@ -19,12 +19,12 @@
             <% Object.keys(urls).forEach((key) => {                 %>
                   <tr>
                     <td style="width:50%">
-           <%       if(userName !== undefined && userName !== ""){   %>
+           <%       if(username !== undefined && username !== ""){   %>
                         <%= key %> --> 
                         <% } %>
                         <a href="<%= urls[key] %>"><%= urls[key] %></a>
                     </td>
-           <%       if(userName !== undefined && userName !== ""){   %>
+           <%       if(username !== undefined && username!== ""){   %>
                     <td style="width:10%">
                         <form method="GET" action="/urls/<%= key%>">
                             <button type="submit" value="update" >Edit</button>
@@ -39,7 +39,7 @@
                   </tr>
             <% });  %>
               </table>
-            <%      if(userName !== undefined && userName !== ""){ %>
+            <%      if(username !== undefined && username!== ""){ %>
                 <form method="GET" action=" /urls/new ">
                     <div><button title="new url" >Add a New URL</button></div>
                 </form>

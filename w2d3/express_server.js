@@ -32,7 +32,7 @@ const users = {
 
 app.get('/', (req, res) => {
   let templateVars = {urls: urlDatabase,
-                      userName: req.cookies["userName"]};
+                      username: req.cookies["username"]};
   res.render('urls_index', templateVars);
 });
 
@@ -70,7 +70,7 @@ app.post("/urls", (req, res) => {
               
   let shortURL = getshortURL(longURL);
   urlDatabase[shortURL] = longURL;
-  let templateVars = {urls: urlDatabase, userName: req.cookies["userName"]};
+  let templateVars = {urls: urlDatabase, username: req.cookies["username"]};
 
   // if inserting data has suceeded go to index with urlDatabase 
   if(urlDatabase.hasOwnProperty(shortURL)){
@@ -84,8 +84,8 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   let id = req.params.id;
   if(delete urlDatabase[id]){
-    // res.cookie('userName', req.cookies['userName'] || '');
-    res.render("urls_index", {urls: urlDatabase, userName: req.cookies['userName'] || ''} );
+    // res.cookie('username', req.cookies['username'] || '');
+    res.render("urls_index", {urls: urlDatabase, username: req.cookies['username'] || ''} );
   }else{
     res.send(`Failed to delete ${id}` );
   };  
@@ -108,17 +108,17 @@ app.post("/urls/:id", (req, res) => {
   let shortURL = req.params.id;
   let longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
-  res.cookie('userName', req.cookies['userName'] || '');
+  res.cookie('username', req.cookies['username'] || '');
   res.redirect("/");
 });
 
 app.post("/login", (req, res) => {
-  res.cookie('userName', req.body.username);
+  res.cookie('username', req.body.username);
   res.redirect("/");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('userName', { path: '/' });
+  res.clearCookie('username', { path: '/' });
   res.redirect("/");
 });
 
