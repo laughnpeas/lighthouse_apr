@@ -1,13 +1,20 @@
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-    </div>
-    <% if(userName === undefined || userName === ""){ %>
-        <form action="/login" method="POST">
-            <input type="text" name="username"> <button name="login" value="login">Sign In</button>
-        </form>
-    <% } else{ %>
-        <form action="/logout" method="POST">
-            <label for="userName"><%= userName %></label><button name="logout" type="submit" value="logout">Logout</button>
-        </form>
-    <% }%>
+<nav>
+	<fieldset>
+		<legend>Log In</legend>
+		<% if(username){ %>
+		<form action="/logout" method="POST">
+			<label for="username"><%= username %></label>
+			<button name="logout" type="submit" value="logout">Logout</button>
+		</form>
+		<% }else{ %>
+		<form action="/login" method="POST">
+			<label for="username">User Name:</label>
+			<input type="text" name="username" id="username" value="" placeholder="Enter Your User Name!">
+			<label for="password">Password</label>
+			<input type="text" name="password" id="password" value="" placeholder="Enter Your Password">
+			<button name="login" value="login">Log In</button>
+			<a href="/register">Register</a>
+		</form>
+		<% } %>
+	</fieldset>
 </nav>
