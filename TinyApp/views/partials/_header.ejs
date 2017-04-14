@@ -1,20 +1,11 @@
 <nav>
-	<fieldset>
-		<legend>Log In</legend>
-		<% if(username){ %>
-		<form action="/logout" method="POST">
-			<label for="username"><%= username %></label>
-			<button name="logout" type="submit" value="logout">Logout</button>
-		</form>
-		<% }else{ %>
-		<form action="/login" method="POST">
-			<label for="username">User Name:</label>
-			<input type="text" name="username" id="username" value="" placeholder="Enter Your User Name!">
-			<label for="password">Password</label>
-			<input type="text" name="password" id="password" value="" placeholder="Enter Your Password">
-			<button name="login" value="login">Log In</button>
-			<a href="/register">Register</a>
-		</form>
-		<% } %>
-	</fieldset>
+	<% if(user){ %>
+	<form action="/logout" method="POST">
+		<label for="username"><%= user.username %></label>
+		<button name="logout" type="submit" value="logout">Logout</button>
+	</form>
+	<% }else{ %>
+		<a href="/login">Log In</a>
+		<a href="/register">Sign Up</a>
+	<% } %>
 </nav>

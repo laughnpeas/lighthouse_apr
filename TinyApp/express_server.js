@@ -1,13 +1,23 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 const app = express();
 const PORT = process.env.PORT || 8080;
+const users = require('./users');
+var bcrypt = require('bcrypt');
 
 app.set('view engine', 'ejs');
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['lighthouse'],
+ 
+  // Cookie Options 
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours 
+}));
+app.use(bodyParser.urlencoded({extended: false}));
 /******* Hard coded Data********************/
 
 let urlDatabase = {
@@ -15,34 +25,54 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-const users = { 
-  "stpnpark": {
-    id: "stpnpark", 
-    email: "stpnpark@gmail.com", 
-    password: "stpn6594"
-  },
- "seanypark": {
-    id: "seanypark", 
-    email: "stpnpark@live.com", 
-    password: "sean6594"
-  }
-}
-
 /******* Hard coded Data********************/
-
+let title = "***Tiny App***";
 app.get('/', (req, res) => {
-  let templateVars = {urls: urlDatabase,
-                      username: req.cookies["username"]};
-  res.render('urls_index', templateVars);
+  let user = null;
+  // if(req.cookies.user){
+    if(req.session.userId){
+    user = users.find( (user) => {
+      return user.id == req.session.userId;
+    });
+  }  
+  res.render('urls_index', {title: title, user: user, urls: urlDatabase});
 });
 
-app.get('/urls', (req, res) => {
-  let templateVars = {urls: urlDatabase};
-  res.render("urls_index", templateVars);
+app.get('/login', (req, res, next) => {
+  res.render('login', {title: "Login", err: null});
+});
+app.post("/login", (req, res, next) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  let user = users.find( (user) => {
+    return (user.username === username)? user.username === username : null;
+  });
+  let err = null;
+  if(user === undefined){
+    err = new Error('User name does not exists');
+    err.statusCode = 400;
+    return next(err);
+    // res.redirect('/login');
+  }else{
+    bcrypt.compare(password, user.password, function(err, result) {
+      if (result) {
+        req.session.userId = user.id;
+        // res.cookie('user', user);
+        res.redirect('/');
+      }else{
+        err = new Error('Password does not match');
+        err.statusCode = 400;
+        return next(err);
+        // res.redirect('/login');
+      }
+    });
+  }
 });
 
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+app.post("/logout", (req, res) => {
+  res.clearCookie('user', { path: '/' });
+  res.redirect("/");
 });
 
 app.get("/register", (req, res) => {
@@ -60,6 +90,59 @@ app.post("/register", (req, res) => {
   }
    
   // res.redirect("/");
+});
+
+app.get('/urls', (req, res) => {
+  let templateVars = {urls: urlDatabase};
+  res.render("urls_index", templateVars);
+});
+
+app.get("/urls/new", (req, res) => {
+  // if(req.cookies.user){
+  if(req.session.userId){
+    res.render("urls_new");
+  }else{
+    res.status(400).send( `<h4>You need to login to add a URL</h4> <a href="/">Go Back</a>` );
+    // res.redirect('/');
+  }
+});
+
+app.get("/", (req, res) => {
+  res.render("");
+});
+
+let userIdArr = users.map( (arr) => {
+  return arr['id'];
+});
+var nextUserId = userIdArr.reduce(function(a, b) {
+    return Math.max(a, b);
+});
+app.post("/", (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+  let email = req.body.email;
+
+  let user = users.find( (user) => { return user.email === email; }) || null;
+  if(user){
+    res.status(400).send( `<h4>You are trying to  with existing id</h4> <a href="/">Go Back</a>` );
+  }else{
+    if(!username){
+      res.status(400).send( `<h4>You don't provide any user id</h4> <a href="/">Go Back</a>` );
+    }
+    if(!password){
+      res.status(400).send( `<h4>You don't provide any password </h4> <a href="/">Go Back</a>` );
+    }
+    if(!email){
+      res.status(400).send( `<h4>You don't provide any email </h4> <a href="/">Go Back</a>` );
+    }
+    nextUserId += 1;
+    newUser = {id: nextUserId, username: username, password: password, email: email};
+    if(users.push(newUser)){
+      res.cookie('user', newUser);
+    }
+    res.redirect('/');
+  }
+
 });
 
 app.post("/urls", (req, res) => {
@@ -89,10 +172,10 @@ app.post("/urls/:id/delete", (req, res) => {
   }else{
     res.send(`Failed to delete ${id}` );
   };  
-
 });
 
 app.get("/u/:shortURL", (req, res) => {
+
   let shortURL = req.originalUrl.substr(3);
   let longURL = urlDatabase[shortURL];
   res.redirect(longURL);
@@ -108,17 +191,7 @@ app.post("/urls/:id", (req, res) => {
   let shortURL = req.params.id;
   let longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
-  res.cookie('username', req.cookies['username'] || '');
-  res.redirect("/");
-});
-
-app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect("/");
-});
-
-app.post("/logout", (req, res) => {
-  res.clearCookie('username', { path: '/' });
+  // res.cookie('user', req.cookies['user'] || '');
   res.redirect("/");
 });
 
@@ -136,3 +209,11 @@ function getshortURL() {
 
   return text;
 }
+
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('login', {
+    err: err.message || '',
+    status: err.statusCode
+  });
+});
