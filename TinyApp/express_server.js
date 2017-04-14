@@ -71,6 +71,7 @@ app.post("/login", (req, res, next) => {
     bcrypt.compare(loginUser.password, user.password, function(err, result) {
       if (result) {
         req.session.user = user;
+        req.session.statusCode = 200;
         res.redirect('/');
   }else{
         err = new Error('Password does not match');
@@ -167,11 +168,12 @@ app.post("/urls", (req, res, next) => {
     let newUrl = urlData.find( (entry) => {
       entry.shortURL == newUrlEntry.shortURL;
     });
+    res.status(200);
     res.redirect('/');
   }else{
   // else send failed message 
     let err = new Error(`Failed to add a URL`);
-    err.statusCode = 400;
+    err.statusCode = 401;
     return next(err);
   }
 });
@@ -179,8 +181,18 @@ app.post("/urls", (req, res, next) => {
 app.post("/urls/:id", (req, res, next) => {
   let shortURL = req.params.id;
   let longURL = req.body.longURL;
-
-  let newUrlEntry = {id: req.session.userId, shortURL: shortURL, longURL: longURL};
+  let userId = req.session.user.id;
+  if(!userId){
+    let err = new Error(`You have to login.`);
+    err.statusCode = 401;
+    return next(err);
+  }
+  if(!shortURL){
+    let err = new Error(`Unable to find the short link`);
+    err.statusCode = 404;
+    return next(err);
+  }
+  let newUrlEntry = {id: userId, shortURL: shortURL, longURL: longURL};
   if(urlData.push(newUrlEntry)){
     res.render('urls_index');
   }else{
