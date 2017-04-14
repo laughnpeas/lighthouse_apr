@@ -3,10 +3,12 @@
   <head></head>
   <body style="font-size:20px; padding:50px;">
     <h2>Update URL</h2>
-    <form action="/urls/<%= shortURL %>/" method="POST" style="margin:150px;">
-    <h3>ShortURL: <b><%= hortURL %></b></h3> 
-      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>" style="width: 300px">
+    <% if(url){ %>
+    <form action="/urls/<%= url.shortURL %>/" method="POST" style="margin:150px;">
+    <h3>ShortURL: <b><%= url.shortURL %></b></h3> 
+      <input id="longURL" type="text" name="longURL" placeholder="<%= url.longURL %>" style="width: 300px">
       <input type="submit" value="Submit">
     </form>
+    <% } %>
   </body>
 </html>
