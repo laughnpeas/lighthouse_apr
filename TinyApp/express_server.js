@@ -20,10 +20,20 @@ app.use(cookieSession({
 app.use(bodyParser.urlencoded({extended: false}));
 /******* Hard coded Data********************/
 
-let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+let urlDatabase = [
+  { id: 1,
+    shortURL: "b2xVn2",
+    longURL: "http://www.lighthouselabs.ca",
+  },
+  { id: 1,
+    shortURL: "b2xVn2",
+    longURL: "http://www.lighthouselabs.ca",
+  },
+  { id: 2 ,
+    shortURL: "9sm5xK",
+    longURL: "http://www.google.com"
+  }
+];
 
 /******* Hard coded Data********************/
 let title = "***Tiny App***";
@@ -35,6 +45,8 @@ app.get('/', (req, res) => {
       return user.id == req.session.userId;
     });
   }  
+  
+  // let urls = getOwnUrl(req.session.userId) || null;
   res.render('urls_index', {title: title, user: user, urls: urlDatabase});
 });
 
@@ -71,7 +83,8 @@ app.post("/login", (req, res, next) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user', { path: '/' });
+  res.clearCookie('session.sig', { path: '/' });
+  // req.session.destroy();
   res.redirect("/");
 });
 
@@ -79,17 +92,39 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+let userIdArr = users.map( (arr) => {
+  return arr['id'];
+});
+let nextUserId = userIdArr.reduce(function(a, b) {
+    return Math.max(a, b);
+});
 app.post("/register", (req, res) => {
-  let userID = req.body.userid;
-  console.log(users.hasOwnProperty(userID));
-  if(users.hasOwnProperty(userID)){
+  let username = req.body.username;
+  let password = req.body.password;
+  let email = req.body.email;
+
+  let user = users.find( (user) => { return user.email === email; }) || null;
+  if(user){
     res.status(400).send( `<h4>You are trying to register with existing id</h4> <a href="/register">Go Back</a>` );
+  }else{
+    if(!username){
+      res.status(400).send( `<h4>You don't provide any user id</h4> <a href="/register">Go Back</a>` );
+    }
+    if(!password){
+      res.status(400).send( `<h4>You don't provide any password </h4> <a href="/register">Go Back</a>` );
+    }
+    if(!email){
+      res.status(400).send( `<h4>You don't provide any email </h4> <a href="/register">Go Back</a>` );
+    }
+    nextUserId += 1;
+    newUser = {id: nextUserId, username: username, password: password, email: email};
+    if(users.push(newUser)){
+      // res.cookie('user', newUser);
+      req.session.userId = newUser.id;
+    }
+    res.redirect('/');
   }
-  if(userID === undefined || userID === ""){
-    res.status(400).send( `<h4>You don't provide any user id</h4> <a href="/register">Go Back</a>` );
-  }
-   
-  // res.redirect("/");
+
 });
 
 app.get('/urls', (req, res) => {
@@ -111,12 +146,6 @@ app.get("/", (req, res) => {
   res.render("");
 });
 
-let userIdArr = users.map( (arr) => {
-  return arr['id'];
-});
-var nextUserId = userIdArr.reduce(function(a, b) {
-    return Math.max(a, b);
-});
 app.post("/", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -183,14 +212,20 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   let shortURL = req.params.id;
+  let ownData = getOwnUrl(req.session.userId);
   let templateVars = { shortURL:  shortURL, longURL: urlDatabase[shortURL] };
   res.render("urls_show", templateVars);
 });
 
+function getOwnUrl(id){
+  return urlDatabase[id];
+}
 app.post("/urls/:id", (req, res) => {
   let shortURL = req.params.id;
   let longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  
+  let newUrlEntry = {id: req.session.userId, shortURL: longURL};
+  urlDatabase.push(newUrlEntry);
   // res.cookie('user', req.cookies['user'] || '');
   res.redirect("/");
 });

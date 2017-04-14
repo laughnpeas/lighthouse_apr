@@ -2,7 +2,7 @@ module.exports = [
   {
     id: 1,
     username: 'sean',
-    password: '$2a$10$6KVhDF8z.ns882eGjZHjReKsVLCXWCLA2KlTwjY8IMqUHFteK82Fm',
+    password: '$2a$10$xuJY3rKUmMa.FXdrxkvVFem1eKg.ATOgAuRDNfFmhrZvBpz3smIGm',
     email: 'sean@lhl.com'
   },
   {
