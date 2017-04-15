@@ -9,8 +9,6 @@ users.forEach(function(user) {
 });
 */
 
-['password', 'Password', 'password'].forEach(function(pw) {
   bcrypt.hash(pw, 10, function(err, hash) {
-    console.log(`Was ${pw} - Now ${hash}`);
+    return hash;
   });
-});

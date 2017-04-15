@@ -12,16 +12,17 @@
 				</div>
 				<div>
 					<table>
-            <% urls.forEach((url) => {                 %>
+            <% if(urls){ %>
+                <% urls.forEach((url) => {                 %>
 							<tr>
 								<td style="width:50%">
                         <%= url.shortURL %> --> 
 									<a href="<%= url.longURL %>"><%= url.longURL %></a>
 								</td>
-           <%       if(user){   %>
+                    <% if(email){   %>
 								<td style="width:10%">
 									<form method="GET" action="/urls/<%= url.shortURL%>">
-											<button type="submit" value="update" >Edit</button>
+											<button type="submit" value="update" >Update</button>
 									</form>
                     </td>
                     <td style="width:20%">
@@ -29,9 +30,10 @@
                             <input type="submit" value="Delete" >
                         </form>
                     </td>
-                  <%  } %>
+                    <%  } %>
                   </tr>
-            <% });  %>
+                <% });  %>
+            <% } %>
               </table>
                 <form method="GET" action=" /urls/new ">
                     <div><button title="new url" >Add a New URL</button></div>

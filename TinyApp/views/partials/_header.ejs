@@ -1,7 +1,7 @@
 <nav>
-	<% if(user){ %>
+	<% if(email){ %>
 	<form action="/logout" method="POST">
-		<label for="username"><%= user.username %></label>
+		<label for="email"><%= email %></label>
 		<button name="logout" type="submit" value="logout">Logout</button>
 	</form>
 	<% }else{ %>
