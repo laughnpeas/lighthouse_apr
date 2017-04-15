@@ -229,14 +229,9 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", { url: selectedUrl });
 });
 
-function getOwnUrl(id){
-  return urlDatabase[id];
-}
-
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
 });
-
 
 function getshortURL() {
   var text = "";
