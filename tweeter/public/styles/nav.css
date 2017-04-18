@@ -1,0 +1,22 @@
+#nav-bar {
+    background: #00a087;
+    color: #e8fdff;
+    height: 80px;
+    padding: 0 2em 0 2em;
+    width: 100%;
+    position: relative;
+}
+#nav-bar .logo {
+    height: 80px;
+    width: 80px;
+}
+#nav-bar .header{
+    font-size: 2em;
+    height: 80px;
+    line-height: 80px;
+    padding: 0 10px;
+    position: absolute;
+}
+.new-tweet > h2{
+    border-bottom: 1px solid black;
+}
