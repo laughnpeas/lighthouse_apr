@@ -17,6 +17,13 @@
     padding: 0 10px;
     position: absolute;
 }
+
+#nav-bar button.compose{
+    float: right;
+    margin-top: 1.5em;
+
+}
+
 .new-tweet > h2{
     border-bottom: 1px solid black;
 }

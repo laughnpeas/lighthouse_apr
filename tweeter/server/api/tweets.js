@@ -1,14 +1,13 @@
-"use strict";
+'use strict';
 
-const User    = require("../lib/user-helper")
+const User    = require('../lib/user-helper');
 const express = require('express');
 const tweets  = express.Router();
 
 module.exports = function(db) {
 
-  tweets.get("/", function(req, res) {
-    let tweets = db.collection("tweets").find().sort({"created_at": -1});
-    tweets.toArray((err, results) => {
+  tweets.get('/', function(req, res) {
+    User.getTweets(db, (err, results) => {
       // simulate delay
       setTimeout(() => {
         return res.json(results);
@@ -16,11 +15,11 @@ module.exports = function(db) {
     });
   });
 
-  tweets.post("/", function(req, res) {
-    // console.log("New Tweet, Body:", req.body);
+  tweets.post('/', function(req, res) {
+    console.log('New Tweet, Body:', req.body);
     if (!req.body.text) {
       res.status(400);
-      return res.send("{'error': 'invalid request'}\n");
+      return res.send('{\'error\': \'invalid request\'}\n');
     }
 
     const user = req.body.user ? req.body.user : User.generateRandomUser();
@@ -31,11 +30,11 @@ module.exports = function(db) {
       },
       created_at: Date.now()
     };
-    db.collection("tweets").insertOne(tweet, (err, result) => {
+    User.saveTweets(db, tweet, (err, result) => {
       res.json(result);
     });
   });
 
   return tweets;
 
-}
+};
