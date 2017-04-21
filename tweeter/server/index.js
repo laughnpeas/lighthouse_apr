@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+// require('dotenv').config();
 // Basic express setup:
 
 const PORT          = 8080;
