@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/index.js",
     "local": "./node_modules/.bin/nodemon --watch server -e js server/index.js",
+    "build-css": "./bin/build-css",
+    "watch-css": "./bin/watch-css",
     "seed": "node server/db/seed.js"
   },
   "author": "Lighthouse Labs",
@@ -19,7 +21,8 @@
     "express": "^4.13.4",
     "jquery-validation": "^1.16.0",
     "md5": "^2.1.0",
-    "mongodb": "^2.1.16"
+    "mongodb": "^2.1.16",
+    "node-sass": "^4.5.2"
   },
   "devDependencies": {
     "nodemon": "^1.9.2"
