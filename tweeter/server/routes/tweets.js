@@ -4,14 +4,12 @@ const User    = require('../lib/user-helper');
 const express = require('express');
 const tweets  = express.Router();
 
-module.exports = function(db) {
+module.exports = function(DataHelper) {
 
   tweets.get('/', function(req, res) {
-    User.getTweets(db, (err, results) => {
+    DataHelper.getTweets((err, results) => {
       // simulate delay
-      setTimeout(() => {
-        return res.json(results);
-      }, 300);
+      res.json(results);
     });
   });
 
@@ -30,7 +28,7 @@ module.exports = function(db) {
       },
       created_at: Date.now()
     };
-    User.saveTweets(db, tweet, (err, result) => {
+    DataHelper.saveTweet(tweet, (err, result) => {
       res.json(result);
     });
   });

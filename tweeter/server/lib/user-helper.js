@@ -6,13 +6,6 @@ const Chance      = require('chance'),
 const md5 = require('md5');
 
 module.exports = {
-  getTweets: (db, cb) => {
-    const tweets = db.collection('tweets').find().sort({'created_at': -1});
-    tweets.toArray(cb);
-  },
-  saveTweets: (db, tweet, cb) => {
-    db.collection('tweets').insertOne(tweet, cb);
-  },
   generateRandomUser: () => {
     const gender    = chance.gender();
     const firstName = chance.first({gender: gender});

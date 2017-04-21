@@ -36,19 +36,19 @@ h2{
 .new-tweet input[name='submit'] {
     float: left;
     position: relative;
-    margin: 20px 0px 16px 0px;
+    margin: 10px 0px 16px 0px;
 }
 .counter{
     position: relative;
     float: right;
-    margin: 25px 16px 0px 0px;
+    margin: 15px 16px 0px 0px;
 }
 
 .counter-warning{
     position: relative;
     float: right;
     color: red;
-    margin: 25px 16px 0px 0px;
+    margin: 15px 16px 0px 0px;
 }
 .new-tweet textarea{
     height: 4em;

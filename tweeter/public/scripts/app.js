@@ -2,7 +2,6 @@ $( () => {
   const maxLen = 140;
   const $form = $('form[name="new-tweet"]');
   $form.on('submit', (event) => {
-    $(this).trigger('reset');
     event.preventDefault();
     //form validatation with name of the field
     $form.validate({
@@ -35,7 +34,7 @@ $( () => {
                 });
             $('section.new-tweet').fadeOut(800);
             loadTweets();
-            $notification.trigger('reset');
+            $notification.reset();
           } 
         });
       }
@@ -49,6 +48,7 @@ $( () => {
   $('.compose').on('click', () => {
     if($newTweet.is(':hidden')){
       $newTweet.slideDown(650, () => {
+        $(this).trigger('reset');
         $('textarea#tweetText').focus();
       });
     }

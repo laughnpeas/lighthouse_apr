@@ -1,29 +1,26 @@
 'use strict';
-
 require('dotenv').config();
+// Basic express setup:
 
-const PORT        = process.env.PORT || 8080;
-const express     = require('express');
-const bodyParser  = require('body-parser');
-const app         = express();
-
-const tweetsApi  = require('./api/tweets');
-const db         = require('./lib/db');
-
-app.set('views', 'public');
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+const PORT          = 8080;
+const express       = require('express');
+const bodyParser    = require('body-parser');
+const app           = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-db.connect((dbInstance) => {
-  app.use('/tweets', tweetsApi(dbInstance));
+require('./lib/dataconnection').connect( (db) => {
+  const DataHelpers = require('./lib/data-helper.js')(db);
+  const tweetsRoutes = require('./routes/tweets')(DataHelpers);
+  app.use('/tweets', tweetsRoutes);
 });
 
-app.get('/', function(req, res){
-  res.render('index.html');
-});
+// The `tweets-routes` module works similarly: we pass it the `DataHelpers` object
+// so it can define routes that use it to interact with the data layer.
+
+// Mount the tweets routes at the "/tweets" path prefix:
+
 app.listen(PORT, () => {
   console.log('Example app listening on port ' + PORT);
 });
