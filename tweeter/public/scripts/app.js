@@ -1,37 +1,50 @@
 $( () => {
-  loadTweets();
-
+  const maxLen = 140;
   const $form = $('form[name="new-tweet"]');
   $form.on('submit', (event) => {
+    $(this).trigger('reset');
     event.preventDefault();
-    const $tweetText = $form.serialize();
-    $('form[name="new_tweet"]').validate({
-      //validate with name of the field
+    //form validatation with name of the field
+    $form.validate({
       rules: {
         text: {
           required: true,
-          maxLength: 200
+          // limitation of the length of text message  
+          maxlength: maxLen
         }
       },
       messages: {
         text: {
           required: 'Please provide your tweet text.',
-          maxLength: 'Your text must be less than 200 characters.'
+          maxlength: `Your text must be less than ${maxLen} characters.`
         }
       },
       submitHandler: (form) => {
-        form.submit();
+        $.ajax({
+          method: 'POST',
+          url: '/tweets',
+          data: $(form).serialize(),
+          // after submit, show comfirm notification to user
+          success: function () {
+            var $notification = $('span.message');
+            $notification.html('<div id="message"></div>');
+            $('#message').html('<label>Your request is on the way!</label>')
+                .hide()
+                .fadeIn(500, function () {
+                  $('#message').append('<img id="checkmark" src="/images/ok.png" />');
+                });
+            $('section.new-tweet').fadeOut(800);
+            loadTweets();
+            $notification.trigger('reset');
+          } 
+        });
       }
     });
-    $.ajax({
-      method: 'POST',
-      url: '/tweets',
-      data: $tweetText 
-    }).then( ()=> {
-      loadTweets();
-    });
   });
+
+  loadTweets();
   
+  //when compose button has clicked, new tweet input form slides down
   const $newTweet = $('.new-tweet');
   $('.compose').on('click', () => {
     if($newTweet.is(':hidden')){
@@ -41,6 +54,7 @@ $( () => {
     }
   });
 
+  // in case of message has no return, cut string into certain amount of character
   function cutStr(str, idx, end){
     var result = '';
     for(var i = 0; i < end ; i+=idx){
@@ -49,6 +63,7 @@ $( () => {
     return result;
   }
 
+  //create tweet format from data
   function createTweetElement(data){
     var $datePassed = calculateDate( data.created_at, Date.now());
     var $tweetText = cutStr(data.content.text, 30, 60) || '';
@@ -76,10 +91,12 @@ $( () => {
   }
 
   function renderTweets(data){
-    $('section.tweets-container').empty();
-    $('section.tweets-container').append(data.map(createTweetElement));
+    // $('section.tweets-container').empty();
+    // $('section.tweets-container').append(data.map(createTweetElement));
+    $('section.tweets-container').empty().append(data.map(createTweetElement));
   }
 
+  //calcualte number of days from created date and now
   function calculateDate(first, second){
     var dt = new Date(first);
     var result = Math.round((new Date(second) - new Date(first))/(1000*60*60*24));
@@ -93,6 +110,7 @@ $( () => {
     }
   }
 
+  //get data from database and render tweets
   function loadTweets(){
     $.ajax({
       method: 'GET',
