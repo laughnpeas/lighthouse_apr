@@ -1,0 +1,151 @@
+.container {
+    width: 480px;
+    margin: 0 auto 100px;
+    background: #FFFFFF;
+    padding: 3em 2em 1em;
+    height: 100%;
+    position: relative;
+}
+
+h2{
+ font-size: 1.5em;   
+}
+
+/*input[type="submit"] {
+    float: left;
+    display: none;
+}*/
+
+.new-tweet {
+    border-radius: 5px;
+    background: #d6dbdf;
+    position: relative;
+    padding: .5em 1em .5em 1em;
+    display: table;
+    height: 170px;
+    width: 100%; 
+    margin-bottom: 2em;
+    display: none;
+}
+
+.new-tweet h2 {
+    border-bottom: 1px solid black;
+    margin-top: 0;
+}
+
+.new-tweet input[name='submit'] {
+    float: left;
+    position: relative;
+    margin: 10px 0px 16px 0px;
+}
+.counter{
+    position: relative;
+    float: right;
+    margin: 15px 16px 0px 0px;
+}
+
+.counter-warning{
+    position: relative;
+    float: right;
+    color: red;
+    margin: 15px 16px 0px 0px;
+}
+.new-tweet textarea{
+    height: 4em;
+    float: left;
+    width: 100%;
+}
+
+.new-tweet textarea[placeholder]{
+    padding: 0.3em;
+    margin:0 0 0.5em 0;
+}
+
+.new-tweet textarea[placeholder]:after{
+    clear: both;
+}
+
+.new-tweet #checkmark{
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+article.tweet{
+    border-radius: 5px;
+    border: solid #d6dbdf;
+    border-width: 1px;
+    position: relative;
+    display: table;
+    height: 240px;
+    width: 100%; 
+    margin-bottom: 2em;
+}
+article.tweet img{
+  width: 4em;
+  height: 4em;
+  margin: 0.3em;
+/*   padding: 0; */
+  float: left;
+  border-radius: 8px; border:3px solid #dbdbdb;
+}
+article.tweet header{
+    background-color: #dbdbdb;
+    height: 0.8em;
+    display: table-row;
+}
+
+article.tweet header h2{
+    margin-top: .3em;
+}
+
+article.tweet header .handle{
+    top: 0.8em;
+    right: 0.8em;
+    position: absolute;
+    color: gray;
+    font: 1em "Roboto";
+}
+article.tweet .content{
+    background-color: white;
+    border-bottom: 1px solid #d6dbdf;
+    height: 8em;
+}
+
+article.tweet .content span{
+    font-size: 1.5em;
+    color: darkgray;
+    top: 30%;
+    left: 0.5em;
+    position: relative;
+    vertical-align: middle;
+}
+
+article.tweet footer{
+  overflow: hidden;
+}
+
+article.tweet footer .date{
+    height: 2em;
+    color: darkgray;
+    bottom: 0.4em;
+    left: 0.5em;
+    position: absolute;
+    display: table-cell;
+    float: left;
+}
+
+article.tweet footer .icons{
+  right: 0;
+  float:right;
+  font-size: 1.3em;
+  color: darkcyan;
+  padding-right: 1em;
+  bottom: 0.4em;
+  position: absolute;
+  opacity: 0;
+}
+
+article.tweet footer:hover .icons{
+  opacity: 1;
+}
