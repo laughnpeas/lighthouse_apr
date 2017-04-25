@@ -5,6 +5,7 @@
     padding: 0 2em 0 2em;
     width: 100%;
     position: relative;
+    /* margin: 0 auto; */
 }
 #nav-bar .logo {
     height: 80px;
@@ -21,7 +22,7 @@
 #nav-bar button.compose{
     float: right;
     margin-top: 1.5em;
-
+    margin-right: 30px;
 }
 
 .new-tweet > h2{
